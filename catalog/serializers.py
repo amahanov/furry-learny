@@ -2,7 +2,7 @@ __author__ = 'omakhanov'
 
 from rest_framework import serializers
 from catalog.models import Author, Book, Genre
-
+from django.shortcuts import get_object_or_404
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,9 +33,19 @@ class BookSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'pub_year')
 
 
+class AuthorField(serializers.RelatedField):
+    def to_native(self, value):
+        return value.__unicode__()
+
+    def from_native(self, value):
+        return get_object_or_404(Author, id=value)
+
+
+
 class BookDatailesSerializer(serializers.ModelSerializer):
-    genre = serializers.RelatedField(many=False)
-    author = serializers.RelatedField(many=False)
+    genre = serializers.RelatedField(many=False, read_only=False)
+    author = AuthorField(many=False, read_only=False)
+#    author = serializers.RelatedField(many=False, read_only=False)
     class Meta:
         model = Book
         fields = ('id', 'title', 'pub_year', 'publisher_name', 'author', 'genre', 'created_dt', 'updated_dt')
