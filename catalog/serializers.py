@@ -20,6 +20,8 @@ class AuthorSerializer(serializers.ModelSerializer):
 class AuthorDatailesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
+        fields = ('id', 'first_name', 'last_name')
+        read_only_fields = ('created_dt', 'updated_dt')
 
 
 class BookSerializer(serializers.ModelSerializer):
