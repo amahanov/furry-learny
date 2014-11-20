@@ -6,6 +6,9 @@ class Genre(models.Model):
     created_dt = models.DateTimeField("Created date and time", auto_now_add=True)
     updated_dt = models.DateTimeField("Updated date and time", auto_now=True)
 
+    def __unicode__(self):
+        return self.title
+
     class Meta:
         db_table = 'genre'
 
@@ -21,15 +24,21 @@ class Author(models.Model):
     class Meta:
         db_table = 'author'
 
+    def __unicode__(self):
+        return self.first_name + ' ' + self.last_name
+
 
 class Book(models.Model):
     title = models.CharField("Book Title", max_length=500)
     pub_year = models.IntegerField("Publication year")
     publisher_name = models.CharField("Publisher name", max_length=200)
-    author = models.ForeignKey(Author, verbose_name="Book Author")
+    author = models.ForeignKey(Author, verbose_name="Book Author", related_name="books")
     genre = models.ForeignKey(Genre, verbose_name="Book Genre")
     created_dt = models.DateTimeField("Created date and time", auto_now_add=True)
     updated_dt = models.DateTimeField("Updated date and time", auto_now=True)
+
+    def __unicode__(self):
+        return self.title + '|' + str(self.pub_year)
 
     class Meta:
         db_table = 'book'
